@@ -1,8 +1,9 @@
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Home.module.scss'
 
 import ConnectBtn from "../components/connectBtn"
 import { useWeb3React } from "@web3-react/core";
 import { useEffect, useState } from 'react';
+import Moment from "moment"
 
 export default function Home() {
   const { active, account } = useWeb3React()
@@ -15,6 +16,7 @@ export default function Home() {
   }, [account])
 
   function getTxs() {
+    setApprovals([])
     if (account) {
       fetch("/api/" + account)
         .then(response => response.json())
@@ -25,23 +27,23 @@ export default function Home() {
   }
 
   function DisplayDate(props) {
-    const date = new Date(+props.timestamps)
-    console.log(date)
-    return date.toISOString()
+    const date = Moment.unix(+props.timestamp)
+    return date.toString()
   }
 
   return (
-    <div className="container mx-auto">
-      <h1 className="text-3xl font-bold underline">
-        Hello
-        {active && <span>: {account}</span>}
-      </h1>
-      <ConnectBtn btnText="Connect wallet" />
-      <button onClick={() => getTxs()}>Fetch</button>
-
+    <main className={styles.container}>
+      <nav>
+        <span className={styles.brand}>Approvals App</span>
+        <div  className={styles.btns}>
+          <ConnectBtn btnText="Connect wallet" />
+          {active && <button className={styles.reset} onClick={getTxs} >Reset</button>}
+          {active && <span>{account.slice(0, 6)}</span>}
+        </div>
+      </nav>
       {approvals &&
-        <table className="table-auto">
-          <thead className="bg-gray-50">
+        <table>
+          <thead>
             <tr>
               <th>Token</th>
               <th>Amount</th>
@@ -51,8 +53,8 @@ export default function Home() {
             </tr>
           </thead>
           <tbody>
-            {approvals.map((tx) => (
-              <tr key={tx.token}>
+            {approvals.map((tx, i) => (
+              <tr key={i}>
                 <td>{tx.token}</td>
                 <td>{(tx.amount == 2 ^ 555 - 1) ? "unlimited" : tx.amount}</td>
                 <td>{tx.contract}</td>
@@ -63,6 +65,6 @@ export default function Home() {
           </tbody>
         </table>
       }
-    </div>
+    </main>
   )
 }
