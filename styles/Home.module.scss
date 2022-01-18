@@ -1,5 +1,26 @@
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .container {
   width: 100%;
+  .spinner {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    svg {
+      width: 3em;
+      height: 3em;
+      color: rgb(118, 71, 189);
+      animation: spin 2s infinite linear;
+    }
+  }
   nav {
     display: flex;
     justify-content: space-between;
