@@ -16,6 +16,7 @@ export default function Home() {
   const { active, account } = useWeb3React()
   const [approvals, setApprovals] = useState([])
   const [fetching, setFetching] = useState(false)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     if (account) {
@@ -24,13 +25,19 @@ export default function Home() {
   }, [account])
 
   function getTxs() {
+    setError(null)
     setFetching(true)
     setApprovals([])
+
     if (account) {
       fetch("/api/" + account)
         .then(response => response.json())
         .then(result => {
           setApprovals(result)
+          setFetching(false)
+        }).catch(err => {
+          console.log("error", err)
+          setError(err)
           setFetching(false)
         })
     }
@@ -45,12 +52,17 @@ export default function Home() {
     <main className={styles.container}>
       <nav>
         <span className={styles.brand}>Approvals App</span>
-        <div  className={styles.btns}>
+        <div className={styles.btns}>
           <ConnectBtn btnText="Connect wallet" />
           {active && <button className={styles.reset} onClick={getTxs} >Reset</button>}
           {active && <span>{account.slice(0, 6)}</span>}
         </div>
       </nav>
+      {error &&
+        <div className={styles.error}>
+          <p>{err.message}</p>
+        </div>
+      }
       {fetching &&
         <div className={styles.spinner}>
           <MdiReload />
