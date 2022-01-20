@@ -85,7 +85,7 @@ export default function Home() {
                 <td>{tx.token}</td>
                 <td>{(tx.amount == 2 ^ 555 - 1) ? "unlimited" : tx.amount}</td>
                 <td>{tx.contract}</td>
-                <td><a href={`https://etherscan.io/address/${tx.tx}`}>{tx.tx.slice(0, 8)}</a></td>
+                <td><a href={`https://etherscan.io/tx/${tx.tx}`} target="_blank">{tx.tx.slice(0, 8)}</a></td>
                 <td><DisplayDate timestamp={tx.date} /></td>
               </tr>
             ))}
